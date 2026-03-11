@@ -123,12 +123,26 @@ const funcao = async () => {
     const prom =
         new Promise<string>((resolve, reject) => {
             setTimeout(function handle() {
-                resolve("Executei a função")
-            }, 0)
+                reject("Executei a função")
+            }, 5000)
         })
     return prom
 }
-funcao()
+try{
+    const resultado = await funcao()
+    console.log(resultado)
+}
+catch(erro){
+    console.log("Minha mensagem de erro:"+erro)
+}
+
 console.log("Fim da execução do código")
 
+
+Math.random()>=0.5{}
+
+// Crie uma função que tenha 50% de chance de retornar "tere" após 
+// 5 segundos ou a função devolve o valor null
+// function devolveTere()
+//E faça o tratamento do erro com o try e catch.
 
