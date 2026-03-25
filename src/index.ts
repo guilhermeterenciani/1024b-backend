@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import express from 'express'
 const app = express()
+app.use(express.json())
 const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
