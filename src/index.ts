@@ -1,31 +1,77 @@
 import express from 'express'
 import MysqlErrorHandle from './mysql_error_handle.js'
 import connection from './mysql_connection.js'
+import type { RowDataPacket } from 'mysql2'
 
 const app = express()
 app.use(express.json())
 
-
+interface IQuantidadePedido extends RowDataPacket{
+    quantidade_pedidos:number
+}
 //1......
 //Crie uma rota '\cliente_data_pedido' que retorne os clientes e a data que os mesmos fizeram 
 // o pedido. Para realizar isso, utilize o comando inner join para juntar as tabelas. 
 // Utilize o banco de dados chamado  dbteremercado
 
-//SELECT nome,datapedido FROM clientes c 
-//                      INNER JOIN pedidos p ON c.idclientes=p.clientes_idclientes
-
+//
+app.get("/cliente_data_pedido", async (req, res) => {
+    try {
+        const [resultado, campos] =
+            await connection.execute(`SELECT nome,datapedido FROM clientes c 
+                      INNER JOIN pedidos p ON c.idclientes=p.clientes_idclientes`)
+        console.log(resultado)
+        res.status(200).json(resultado)
+    } catch (err) {
+        const mysqlErrorHandle = new MysqlErrorHandle(err,res)
+        mysqlErrorHandle.validar()
+    }
+})
 //2 Crie uma rota chamada '\pedidos_2026' que retorne 
 // idclientes, nome, cidade, idade,idpedidos,datapedido dos pedidos feitos no ano
 // de 2026.
-
+app.get("/pedidos_2026", async (req, res) => {
+    try {
+        const [resultado, campos] =
+            await connection.execute(`SELECT idclientes, nome, cidade, idade,idpedidos,datapedido FROM clientes c  
+                      INNER JOIN pedidos p ON c.idclientes=p.clientes_idclientes WHERE datapedido BETWEEN '2026-01-01' AND '2026-12-31'`)
+        console.log(resultado)
+        res.status(200).json(resultado)
+    } catch (err) {
+        const mysqlErrorHandle = new MysqlErrorHandle(err,res)
+        mysqlErrorHandle.validar()
+    }
+})
 //3.Crie uma rota chamada '\quantidade_pedidos' que retorne 
 // um json no formato '{quantidade_pedidos:100}' com a quantidade de pedidos cadastrados
 // na tabela pedidos. USE O COMANDO COUNT(*) para contar as quantidades.
-
+app.get("/quantidade_pedidos", async (req, res) => {
+    try {
+        const [resultado, campos] =
+            await connection.execute<IQuantidadePedido[]>(`SELECT COUNT(*) as quantidade_pedidos FROM pedidos`)
+            const [quantidadePedidos] = [...resultado]
+        console.log(quantidadePedidos)
+        res.status(200).json(quantidadePedidos)
+    } catch (err) {
+        const mysqlErrorHandle = new MysqlErrorHandle(err,res)
+        mysqlErrorHandle.validar()
+    }
+})
 //4 Crie uma rota chamada '\quantidade_pedidos_clientes' que retorne
 // um json no formato '[{nome:"tere",quantidade_pedidos:1000}]' que retorne 
 // todos os clientes e a quantidade de pedidos que cada cliente fez
-
+app.get("/quantidade_pedidos_clientes", async (req, res) => {
+    try {
+        const [resultado, campos] =
+            await connection.execute(`SELECT c.nome as nome,COUNT(*) as quantidade_pedidos FROM clientes c  
+                      INNER JOIN pedidos p ON c.idclientes=p.clientes_idclientes GROUP BY c.nome`)
+        console.log(resultado)
+        res.status(200).json(resultado)
+    } catch (err) {
+        const mysqlErrorHandle = new MysqlErrorHandle(err,res)
+        mysqlErrorHandle.validar()
+    }
+})
 
 
 
