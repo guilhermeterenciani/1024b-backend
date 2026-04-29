@@ -73,7 +73,15 @@ app.get("/quantidade_pedidos_clientes", async (req, res) => {
     }
 })
 
-
+/**
+ * 5) ROTA    /quantidade_produtos_por_cliente
+ * Crie um código que retorne o nome do cliente e a quantidade de produtos que cada pedido tem
+ *    formato    [{nome:"Nome Cliente",idpedido:1,quantidade_produtos:1000}]
+ * 
+ * 6)    /valor_pedido_total
+ * Crie um código que retorne o nome do cliente e o valor total de cada pedido
+ *    [{nome:"Nome Cliente",valor_total:1000}]
+ */
 
 
 
