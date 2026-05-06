@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h1>Olá Mundo!</h1>
+    <div id="lista-pedidos">
+
+    </div>
     <script>
-        async function buscaDados(){
-           const resposta = await fetch("http://localhost:8000/valor_pedido_total")
-           const dados = await resposta.json()
-           console.log(dados)
+        async function buscaDados() {
+            const resposta = await fetch("http://localhost:8000/valor_pedido_total")
+            const dados = await resposta.json()
+            const div = document.getElementById("lista-pedidos")
+            console.log(dados)
+            for (let i = 0; i < dados.length; i++) {
+                div.innerText += `${dados[i].nome} ${dados[i].valor_total}\n`
+            }
         }
         buscaDados()
     </script>
 </body>
+
 </html>
